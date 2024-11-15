@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrubHut - Partner Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        :root {
+            --primary-color: #FF5A5F;
+            --white: #ffffff;
+            --gray: #484848;
+            --light-gray: #767676;
+            --bg-overlay: rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            background-color: #f7f7f7;
+        }
+
+        /* Navigation Styles */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: var(--white);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .partner-section {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--light-gray);
+        }
+
+        /* Form Styles */
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gray);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .time-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .switch-form a {
+            color: var(--primary-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            color: #28a745;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #d4edda;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">FeastFinder</a>
+        <div class="nav-buttons">
+            <button class="nav-btn" onclick="showDeliveryForms()">Delivery Executive</button>
+            <button class="nav-btn" onclick="showRestaurantForms()">Restaurant</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Delivery Executive Section -->
+        <section id="deliverySection" class="partner-section">
+            <div class="section-header">
+                <h2>Delivery Executive Portal</h2>
+                <p>Join our delivery team</p>
+            </div>
+
+            <!-- Delivery Executive Login Form -->
+            <form id="deliveryLoginForm" class="auth-form">
+                <div class="section-header">
+                    <h3>Login to Your Account</h3>
+                </div>
+                <div class="form-group">
+                    <label for="delLoginEmail">Email</label>
+                    <input type="email" id="delLoginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="delLoginPassword">Password</label>
+                    <input type="password" id="delLoginPassword" required>
+                </div>
+                <button type="submit" class="submit-btn">Log In</button>
+                <div class="switch-form">
+                    <p>New delivery partner? <a onclick="switchDeliveryForm('signup')">Sign Up</a></p>
+                </div>
+                <div class="success-message" id="delLoginSuccess">Successfully logged in!</div>
+            </form>
+
+            <!-- Delivery Executive Signup Form -->
+            <form id="deliverySignupForm" class="auth-form">
+                <div class="section-header">
+                    <h3>Create Delivery Account</h3>
+                </div>
+                <div class="form-group">
+                    <label for="delName">Full Name</label>
+                    <input type="text" id="delName" required>
+                </div>
+                <div class="form-group">
+                    <label for="delEmail">Email</label>
+                    <input type="email" id="delEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="delPhone">Phone Number</label>
+                    <input type="tel" id="delPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="delGovId">Government ID Number</label>
+                    <input type="text" id="delGovId" required>
+                </div>
+                <div class="form-group">
+                    <label for="delAddress">Home Address</label>
+                    <input type="text" id="delAddress" required>
+                </div>
+                <div class="form-group">
+                    <label for="delPassword">Password</label>
+                    <input type="password" id="delPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="delConfirmPassword">Confirm Password</label>
+                    <input type="password" id="delConfirmPassword" required>
+                </div>
+                <button type="submit" class="submit-btn">Sign Up</button>
+                <div class="switch-form">
+                    <p>Already registered? <a onclick="switchDeliveryForm('login')">Log In</a></p>
+                </div>
+                <div class="success-message" id="delSignupSuccess">Account created successfully!</div>
+            </form>
+        </section>
+
+        <!-- Restaurant Section -->
+        <section id="restaurantSection" class="partner-section">
+            <div class="section-header">
+                <h2>Restaurant Portal</h2>
+                <p>Partner with us</p>
+            </div>
+
+            <!-- Restaurant Login Form -->
+            <form id="restLoginForm" class="auth-form">
+                <div class="section-header">
+                    <h3>Login to Restaurant Dashboard</h3>
+                </div>
+                <div class="form-group">
+                    <label for="restLoginEmail">Email</label>
+                    <input type="email" id="restLoginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="restLoginPassword">Password</label>
+                    <input type="password" id="restLoginPassword" required>
+                </div>
+                <button type="submit" class="submit-btn">Log In</button>
+                <div class="switch-form">
+                    <p>New restaurant? <a onclick="switchRestaurantForm('signup')">Register Now</a></p>
+                </div>
+                <div class="success-message" id="restLoginSuccess">Successfully logged in!</div>
+            </form>
+
+            <!-- Restaurant Signup Form -->
+            <form id="restSignupForm" class="auth-form">
+                <div class="section-header">
+                    <h3>Register Your Restaurant</h3>
+                </div>
+                <div class="form-group">
+                    <label for="restName">Restaurant Name</label>
+                    <input type="text" id="restName" required>
+                </div>
+                <div class="form-group">
+                    <label for="ownerName">Owner Name</label>
+                    <input type="text" id="ownerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="restEmail">Email</label>
+                    <input type="email" id="restEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Working Hours</label>
+                    <div class="time-inputs">
+                        <input type="time" id="openTime" required>
+                        <input type="time" id="closeTime" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="restPassword">Password</label>
+                    <input type="password" id="restPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="restConfirmPassword">Confirm Password</label>
+                    <input type="password" id="restConfirmPassword" required>
+                </div>
+                <button type="submit" class="submit-btn">Register Restaurant</button>
+                <div class="switch-form">
+                    <p>Already registered? <a onclick="switchRestaurantForm('login')">Log In</a></p>
+                </div>
+                <div class="success-message" id="restSignupSuccess">Restaurant registered successfully!</div>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        // Initialize forms
+        window.onload = function() {
+            showDeliveryForms();
+        }
+
+        // Show delivery executive forms
+        function showDeliveryForms() {
+            document.getElementById('deliverySection').style.display = 'block';
+            document.getElementById('restaurantSection').style.display = 'none';
+            switchDeliveryForm('login');
+        }
+
+        // Show restaurant forms
+        function showRestaurantForms() {
+            document.getElementById('deliverySection').style.display = 'none';
+            document.getElementById('restaurantSection').style.display = 'block';
+            switchRestaurantForm('login');
+        }
+
+        // Switch between delivery executive login and signup forms
+        function switchDeliveryForm(formType) {
+            const loginForm = document.getElementById('deliveryLoginForm');
+            const signupForm = document.getElementById('deliverySignupForm');
+            
+            if (formType === 'login') {
+                loginForm.classList.add('active');
+                signupForm.classList.remove('active');
+            } else {
+                signupForm.classList.add('active');
+                loginForm.classList.remove('active');
+            }
+        }
+
+        // Switch between restaurant login and signup forms
+        function switchRestaurantForm(formType) {
+            const loginForm = document.getElementById('restLoginForm');
+            const signupForm = document.getElementById('restSignupForm');
+            
+            if (formType === 'login') {
+                loginForm.classList.add('active');
+                signupForm.classList.remove('active');
+            } else {
+                signupForm.classList.add('active');
+                loginForm.classList.remove('active');
+            }
+        }
+
+        // Form validation functions
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function validatePhone(phone) {
+            return /^\d{10}$/.test(phone);
+        }
+
+        // Handle delivery executive login
+        document.getElementById('deliveryLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add validation logic here
+            document.getElementById('delLoginSuccess').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('delLoginSuccess').style.display = 'none';
+            }, 2000);
+        });
+
+        // Handle delivery executive signup
+        document.getElementById('deliverySignupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add validation logic here
+            document.getElementById('delSignupSuccess').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('delSignupSuccess').style.display = 'none';
+            }, 2000);
+        });
+
+        // Handle restaurant login
+        document.getElementById('restLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add validation logic here
+            document.getElementById('restLoginSuccess').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('restLoginSuccess').style.display = 'none';
+            }, 2000);
+        });
+
+        // Handle restaurant signup
+        document.getElementById('restSignupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add validation logic here
+            document.getElementById('restSignupSuccess').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('restSignupSuccess').style.display = 'none';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

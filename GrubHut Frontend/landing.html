@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrubHut - Browse Restaurants</title>
+    <style>
+        :root {
+            --rausch: #FF5A5F;
+            --rausch-light: #FF7478;
+            --rausch-dark: #E74347;
+            --rausch-bg: #FFF0F0;
+            --rausch-shadow: rgba(255, 90, 95, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--rausch-bg);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: white;
+            box-shadow: 0 2px 15px var(--rausch-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--rausch);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            text-shadow: 1px 1px 1px var(--rausch-shadow);
+        }
+
+        .logo:hover {
+            color: var(--rausch-dark);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-buttons a {
+            padding: 0.5rem 1.2rem;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-buttons .partner {
+            color: var(--rausch);
+            position: relative;
+        }
+
+        .nav-buttons .partner::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--rausch);
+            transition: width 0.3s ease;
+        }
+
+        .nav-buttons .partner:hover::after {
+            width: 80%;
+        }
+
+        .nav-buttons .signup {
+            background-color: var(--rausch);
+            color: white;
+            box-shadow: 0 4px 15px var(--rausch-shadow);
+        }
+
+        .nav-buttons .signup:hover {
+            background-color: var(--rausch-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--rausch-shadow);
+        }
+
+        .nav-buttons .login {
+            border: 2px solid var(--rausch);
+            color: var(--rausch);
+        }
+
+        .nav-buttons .login:hover {
+            background-color: var(--rausch);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px var(--rausch-shadow);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 6rem 1rem;
+            background: linear-gradient(135deg, var(--rausch-bg) 0%, white 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--rausch-light), var(--rausch), var(--rausch-dark));
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 2rem;
+            color: #333;
+            text-shadow: 1px 1px 1px var(--rausch-shadow);
+        }
+
+        .hero h1 span {
+            color: var(--rausch);
+        }
+
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 1.2rem;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 4px 20px var(--rausch-shadow);
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            color: var(--rausch);
+            font-weight: 500;
+        }
+
+        .search-container:hover {
+            border-color: var(--rausch);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px var(--rausch-shadow);
+        }
+
+        .features {
+            padding: 6rem 5%;
+            background: white;
+        }
+
+        .features h2 {
+            text-align: center;
+            margin-bottom: 4rem;
+            color: var(--rausch);
+            position: relative;
+            font-size: 2.2rem;
+        }
+
+        .features h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--rausch-light), var(--rausch), var(--rausch-dark));
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2.5rem 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--rausch-shadow);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--rausch-light), var(--rausch));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--rausch-light);
+            box-shadow: 0 8px 30px var(--rausch-shadow);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--rausch);
+            text-shadow: 2px 2px 4px var(--rausch-shadow);
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--rausch);
+            font-size: 1.4rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-buttons {
+                gap: 0.5rem;
+            }
+
+            .nav-buttons a {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .features h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="logo">GrubHut</a>
+        <div class="nav-buttons">
+            <a href="#" class="partner">Partner with us</a>
+            <a href="#" class="signup">Sign up</a>
+            <a href="#" class="login">Log in</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Local favorites, <span>delivered</span> to your door</h1>
+        <div class="search-container">
+            Restaurants Near You
+        </div>
+    </section>
+
+    <section class="features">
+        <h2>Why choose GrubHut?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🕒</div>
+                <h3>Fast Delivery</h3>
+                <p>Your favorite meals delivered in minutes</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🍽️</div>
+                <h3>Best Local Restaurants</h3>
+                <p>Discover your new favorite spots</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Great Value</h3>
+                <p>Exclusive deals and offers</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

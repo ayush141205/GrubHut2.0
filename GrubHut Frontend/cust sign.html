@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrubHut - Authentication</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        :root {
+            --primary-color: #FF5A5F;
+            --white: #ffffff;
+            --gray: #484848;
+            --light-gray: #767676;
+            --bg-overlay: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Navigation Styles */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: var(--white);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-buttons button {
+            padding: 0.5rem 1rem;
+            margin-left: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-overlay);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        /* Form Styles */
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-header h2 {
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: var(--light-gray);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gray);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .switch-form a {
+            color: var(--primary-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Error Message Styles */
+        .error-message {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        /* Success Message Styles */
+        .success-message {
+            display: none;
+            text-align: center;
+            color: #28a745;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">FeastFinder</a>
+        <div class="nav-buttons">
+            <button onclick="openModal('login')" class="login-btn">Log In</button>
+            <button onclick="openModal('signup')" class="signup-btn">Sign Up</button>
+        </div>
+    </nav>
+
+    <!-- Authentication Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form">
+                <div class="form-header">
+                    <h2>Welcome Back</h2>
+                    <p>Log in to your account</p>
+                </div>
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                    <div class="error-message" id="loginEmailError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                    <div class="error-message" id="loginPasswordError"></div>
+                </div>
+                <button type="submit" class="submit-btn">Log In</button>
+                <div class="switch-form">
+                    <p>Don't have an account? <a onclick="switchForm('signup')">Sign Up</a></p>
+                </div>
+                <div class="success-message" id="loginSuccess">Successfully logged in!</div>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form id="signupForm" class="auth-form">
+                <div class="form-header">
+                    <h2>Create Account</h2>
+                    <p>Sign up to get started</p>
+                </div>
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required>
+                    <div class="error-message" id="signupNameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                    <div class="error-message" id="signupEmailError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                    <div class="error-message" id="signupPasswordError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" required>
+                    <div class="error-message" id="signupConfirmPasswordError"></div>
+                </div>
+                <button type="submit" class="submit-btn">Sign Up</button>
+                <div class="switch-form">
+                    <p>Already have an account? <a onclick="switchForm('login')">Log In</a></p>
+                </div>
+                <div class="success-message" id="signupSuccess">Account created successfully!</div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const modal = document.getElementById('authModal');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+
+        // Open modal and show appropriate form
+        function openModal(formType) {
+            modal.style.display = 'flex';
+            switchForm(formType);
+        }
+
+        // Close modal
+        function closeModal() {
+            modal.style.display = 'none';
+            resetForms();
+        }
+
+        // Switch between login and signup forms
+        function switchForm(formType) {
+            resetForms();
+            if (formType === 'login') {
+                loginForm.classList.add('active');
+                signupForm.classList.remove('active');
+            } else {
+                signupForm.classList.add('active');
+                loginForm.classList.remove('active');
+            }
+        }
+
+        // Reset forms and error messages
+        function resetForms() {
+            loginForm.reset();
+            signupForm.reset();
+            document.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
+            document.querySelectorAll('.success-message').forEach(success => success.style.display = 'none');
+        }
+
+        // Validate email format
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // Handle login form submission
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail');
+            const password = document.getElementById('loginPassword');
+            let isValid = true;
+
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
+
+            // Validate email
+            if (!isValidEmail(email.value)) {
+                document.getElementById('loginEmailError').textContent = 'Please enter a valid email';
+                document.getElementById('loginEmailError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate password
+            if (password.value.length < 6) {
+                document.getElementById('loginPasswordError').textContent = 'Password must be at least 6 characters';
+                document.getElementById('loginPasswordError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (isValid) {
+                // Show success message (in real app, you'd handle the login here)
+                document.getElementById('loginSuccess').style.display = 'block';
+                setTimeout(() => {
+                    closeModal();
+                }, 2000);
+            }
+        });
+
+        // Handle signup form submission
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('signupName');
+            const email = document.getElementById('signupEmail');
+            const password = document.getElementById('signupPassword');
+            const confirmPassword = document.getElementById('signupConfirmPassword');
+            let isValid = true;
+
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
+
+            // Validate name
+            if (name.value.length < 2) {
+                document.getElementById('signupNameError').textContent = 'Please enter your full name';
+                document.getElementById('signupNameError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate email
+            if (!isValidEmail(email.value)) {
+                document.getElementById('signupEmailError').textContent = 'Please enter a valid email';
+                document.getElementById('signupEmailError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate password
+            if (password.value.length < 6) {
+                document.getElementById('signupPasswordError').textContent = 'Password must be at least 6 characters';
+                document.getElementById('signupPasswordError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate password confirmation
+            if (password.value !== confirmPassword.value) {
+                document.getElementById('signupConfirmPasswordError').textContent = 'Passwords do not match';
+                document.getElementById('signupConfirmPasswordError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (isValid) {
+                // Show success message (in real app, you'd handle the signup here)
+                document.getElementById('signupSuccess').style.display = 'block';
+                setTimeout(() => {
+                    closeModal();
+                }, 2000);
+            }
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

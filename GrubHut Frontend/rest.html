@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Rustic Kitchen</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Header styles */
+        header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-buttons a {
+            text-decoration: none;
+            color: #FF5A5F;
+            cursor: pointer;
+        }
+
+        .nav-buttons a:hover {
+            color: #666;
+        }
+
+        /* Hero section */
+        .hero {
+            background: #FF5A5F;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .hero p {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        /* Restaurant info section */
+        .restaurant-info {
+            background: white;
+            padding: 3rem 1rem;
+        }
+
+        .info-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .info-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-item p {
+            color: #666;
+        }
+
+        /* Menu section */
+        .menu-section {
+            padding: 3rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .menu-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .menu-tab {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            background: #FF5A5F;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .menu-tab.active {
+            background: #333;
+            color: white;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .menu-item {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .menu-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .menu-item-content {
+            padding: 1rem;
+        }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-item-title {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .menu-item-price {
+            font-weight: bold;
+        }
+
+        .menu-item-content p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 0.5rem;
+            background: #FF5A5F;
+            color: WHITE;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .add-to-cart:hover {
+            background: #444;
+        }
+
+        /* About page */
+        .about-section {
+            max-width: 800px;
+            margin: 6rem auto 2rem;
+            padding: 2rem;
+        }
+
+        /* Contact page */
+        .contact-section {
+            max-width: 800px;
+            margin: 6rem auto 2rem;
+            padding: 2rem;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Cart page */
+        .cart-section {
+            max-width: 800px;
+            margin: 6rem auto 2rem;
+            padding: 2rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-total {
+            margin-top: 2rem;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        /* Hide all pages by default */
+        .page {
+            display: none;
+        }
+
+        /* Show active page */
+        .page.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a class="logo" onclick="showPage('home')">The Rustic Kitchen</a>
+            <nav class="nav-buttons">
+                <a onclick="showPage('menu')">Menu</a>
+                <a onclick="showPage('about')">About</a>
+                <a onclick="showPage('contact')">Contact</a>
+                <a onclick="showPage('cart')">Cart (0)</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="hero">
+            <h1>The Rustic Kitchen</h1>
+            <p>Authentic Italian Cuisine | Est. 2015</p>
+        </div>
+
+        <div class="restaurant-info">
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>4.8 ★</h3>
+                    <p>1000+ Reviews</p>
+                </div>
+                <div class="info-item">
+                    <h3>25-35 min</h3>
+                    <p>Delivery Time</p>
+                </div>
+                <div class="info-item">
+                    <h3>Free Delivery</h3>
+                    <p>On orders over $30</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-tabs">
+                <button class="menu-tab active" onclick="filterMenu('all')">All</button>
+                <button class="menu-tab" onclick="filterMenu('pizza')">Pizza</button>
+                <button class="menu-tab" onclick="filterMenu('pasta')">Pasta</button>
+                <button class="menu-tab" onclick="filterMenu('appetizers')">Appetizers</button>
+                <button class="menu-tab" onclick="filterMenu('desserts')">Desserts</button>
+            </div>
+
+            <div class="menu-grid">
+                <!-- Menu items will be dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Page -->
+    <div id="menu" class="page">
+        <div class="menu-section" style="margin-top: 5rem;">
+            <!-- Same content as home page menu section -->
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="about" class="page">
+        <div class="about-section">
+            <h2>About Us</h2>
+            <p>Since 2015, The Rustic Kitchen has been serving authentic Italian cuisine to our valued customers. Our recipes have been passed down through generations, and we take pride in using only the freshest ingredients to create memorable dining experiences.</p>
+            <br>
+            <p>Our team of experienced chefs combines traditional Italian cooking methods with modern culinary innovations to bring you the best of both worlds.</p>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page">
+        <div class="contact-section">
+            <h2>Contact Us</h2>
+            <div class="contact-grid">
+                <div>
+                    <h3>Location</h3>
+                    <p>123 Italian Street<br>Foodville, FD 12345<br>United States</p>
+                    <br>
+                    <h3>Hours</h3>
+                    <p>Monday - Friday: 11:00 AM - 10:00 PM<br>Saturday - Sunday: 12:00 PM - 11:00 PM</p>
+                </div>
+                <div>
+                    <h3>Get in Touch</h3>
+                    <p>Phone: (555) 123-4567<br>Email: info@rustickitchen.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Page -->
+    <div id="cart" class="page">
+        <div class="cart-section">
+            <h2>Your Cart</h2>
+            <div id="cart-items">
+                <!-- Cart items will be dynamically populated -->
+                <p>Your cart is empty</p>
+            </div>
+            <div class="cart-total">
+                Total: $0.00
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Menu items data
+        const menuItems = [
+            {
+                name: "Margherita Pizza",
+                price: 16.99,
+                description: "Fresh mozzarella, tomatoes, basil, olive oil",
+                category: "pizza",
+                image: "/api/placeholder/400/320"
+            },
+            {
+                name: "Pepperoni Pizza",
+                price: 18.99,
+                description: "Pepperoni, mozzarella, tomato sauce",
+                category: "pizza",
+                image: "/api/placeholder/400/320"
+            },
+            {
+                name: "Fettuccine Alfredo",
+                price: 17.99,
+                description: "Creamy parmesan sauce, fettuccine pasta",
+                category: "pasta",
+                image: "/api/placeholder/400/320"
+            },
+            {
+                name: "Spaghetti Carbonara",
+                price: 19.99,
+                description: "Pancetta, egg, pecorino romano, black pepper",
+                category: "pasta",
+                image: "/api/placeholder/400/320"
+            },
+            {
+                name: "Bruschetta",
+                price: 9.99,
+                description: "Toasted bread, tomatoes, garlic, basil",
+                category: "appetizers",
+                image: "/api/placeholder/400/320"
+            },
+            {
+                name: "Tiramisu",
+                price: 8.99,
+                description: "Coffee-soaked ladyfingers, mascarpone cream",
+                category: "desserts",
+                image: "/api/placeholder/400/320"
+            }
+        ];
+
+        // Cart data
+        let cartItems = [];
+
+        // Navigation function
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Menu filtering function
+        function filterMenu(category) {
+            const filteredItems = category === 'all' 
+                ? menuItems 
+                : menuItems.filter(item => item.category === category);
+            
+            renderMenuItems(filteredItems);
+            
+            document.querySelectorAll('.menu-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Render menu items
+        function renderMenuItems(items) {
+            const menuGrids = document.querySelectorAll('.menu-grid');
+            const menuHTML = items.map(item => `
+                <div class="menu-item">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="menu-item-content">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">${item.name}</h3>
+                            <span class="menu-item-price">$${item.price}</span>
+                        </div>
+                        <p>${item.description}</p>
+                        <button class="add-to-cart" onclick="addToCart(${JSON.stringify(item)})">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            menuGrids.forEach(grid => {
+                grid.innerHTML = menuHTML;
+            });
+        }
+
+        // Add to cart function
+        function addToCart(item) {
+            cartItems.push(item);
+            updateCart();
+        }
+
+        // Update cart display
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartCount = document.querySelector('.nav-buttons a:last-child');
+            
+            if (cartItems.length === 0) {
+                cartItemsContainer.innerHTML = '<p>Your cart is empty</p>';
+                cartCount.textContent = 'Cart (0)';
+            } else {
+                const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+                cartCount.textContent = `Cart (${cartItems.length})`;
+                
+                cartItemsContainer.innerHTML = cartItems.map(item => `
+                    <div class="cart-item">
+                        <div>
+                            <h3>${item.name}</h3>
+                            <p>${item.description}</p>
+                        </div>
+                        <span>$${item.price}</span>
+                    </div>
+                `).join('') + `
+                    <div class="cart-total">
+                        Total: $${total.toFixed(2)}
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize the menu on load
+        window.onload = () => {
+            renderMenuItems(menuItems);
+        };
+    </script>
+</body>
+</html>
